@@ -1,6 +1,8 @@
 #include "dawn.h"
+#include <iostream>
 
 using namespace dawn;
+using namespace std;
 
 int main(int argc, char **argv) {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -8,21 +10,30 @@ int main(int argc, char **argv) {
   bool exit = false;
   SDL_Event e;
   WindowOption main_option;
-  SDL_Rect rect;
-  rect.x = 0;
-  rect.y = 0;
-  rect.w = 1500;
-  rect.h = 888;
-  main_option.height = 1280;
+
+  main_option.height = 1080;
   main_option.width = 1920;
   main_option.title = "Playground";
 
   BasicWindow win0(main_option);
-  win0.SetViewport(rect);
+  Texture texture1("C:\\workspace\\img0.jpg", kImageJPG, win0.GetRenderer());
+  auto rect1 = ProduceRect(0, 0, 1500, 888);
+  Texture texture2("C:\\workspace\\img1.jpg", kImageJPG, win0.GetRenderer());
+  auto rect2 = ProduceRect(1500, 0, 400, 400);
+  Texture sprites("C:\\workspace\\sprites.png", kImagePNG, win0.GetRenderer(),
+    true, ColorValue(0, 0xff, 0xff));
+  auto rect3 = ProduceRect(0, 0, 100, 100);
+  auto rect4 = ProduceRect(100, 0, 100, 100);
+  auto sp_rect = ProduceRect(0, 888, 100, 100);
+  auto sp_rect2 = ProduceRect(100, 888, 100, 100);
 
-  IMG_Init(IMG_INIT_JPG);
-  auto texture = win0.ProduceTextureFromRenderer("C:\\workspace\\img0.jpg");
-  win0.Present(texture);
+  win0.SetDrawColor(255, 255, 255, 255);
+  win0.Clear();
+  win0.Copy(texture1, nullptr, &rect1);
+  win0.Copy(texture2, nullptr, &rect2);
+  win0.Copy(sprites, &rect3, &sp_rect);
+  win0.Copy(sprites, &rect4, &sp_rect2);
+  win0.Present();
 
   while (!exit) {
     while (SDL_PollEvent(&e) == 1) {
@@ -35,9 +46,6 @@ int main(int argc, char **argv) {
       }
     }
   }
-  
-
-  SDL_DestroyTexture(texture);
 
   SDL_Quit();
   return 0;
