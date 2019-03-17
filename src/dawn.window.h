@@ -115,11 +115,43 @@ namespace dawn {
     ColorValue(int r, int g, int b, int a) :
       type(kColorRGBA),
       r(r), g(g), b(b), a(a) {}
+
+    ColorValue(SDL_Color color) :
+      type(kColorRGBA),
+      r(color.r), g(color.g), b(color.b), a(color.a) {}
+
+    SDL_Color Get() {
+      SDL_Color result = { r,g,b,a };
+      return result;
+    }
+  };
+
+  class Font {
+  protected:
+    TTF_Font *ptr_;
+
+  public:
+    virtual ~Font() {
+      if (TTF_WasInit()) {
+        TTF_CloseFont(ptr_);
+      }
+    }
+
+    Font() = delete;
+
+    Font(string path, int size) :
+      ptr_(TTF_OpenFont(path.c_str(),size)) {}
+
+    TTF_Font *Get() { return ptr_; }
+
+    bool Good() const { return ptr_ != nullptr; }
   };
 
   class Texture {
   protected:
     SDL_Texture *ptr_;
+    int width_;
+    int height_;
 
   public:
     virtual ~Texture() {
@@ -128,17 +160,22 @@ namespace dawn {
 
     Texture() : ptr_(nullptr) {}
 
-    Texture(SDL_Texture *ptr) : ptr_(ptr) {}
-
     Texture(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue()) :
-      ptr_(nullptr) {
+      ptr_(nullptr), width_(-1), height_(-1) {
       Init(path, type, renderer, enable_colorkey, key);
+    }
+
+    Texture(string text, Font &font, SDL_Renderer *renderer, ColorValue color) : 
+      ptr_(nullptr), width_(-1), height_(-1) {
+      Init(text, font, renderer, color);
     }
 
   public:
     bool Init(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue());
+
+    bool Init(string text, Font &font, SDL_Renderer *renderer, ColorValue color);
 
     auto Get() { return ptr_; }
 
@@ -153,7 +190,11 @@ namespace dawn {
     bool SetAlpha(uint8_t a) {
       return SDL_SetTextureAlphaMod(ptr_, a) == 0;
     }
+
+    int GetWidth() const { return width_; }
+    int GetHeight() const { return height_; }
   };
 
+  using ManagedFont = shared_ptr<Font>;
   using ManagedTexture = shared_ptr<Texture>;
 }

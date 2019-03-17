@@ -38,6 +38,10 @@ namespace dawn {
 
   bool Texture::Init(string path, int type, SDL_Renderer *renderer,
     bool enable_colorkey, ColorValue key) {
+    if (ptr_ != nullptr) {
+      SDL_DestroyTexture(ptr_);
+    }
+
     IMG_Init(type);
     SDL_Surface *surface = IMG_Load(path.c_str());
 
@@ -62,6 +66,37 @@ namespace dawn {
     }
 
     ptr_ = SDL_CreateTextureFromSurface(renderer, surface);
+    width_ = surface->w;
+    height_ = surface->h;
+
+    SDL_FreeSurface(surface);
+
+    return ptr_ != nullptr;
+  }
+
+  bool Texture::Init(string text, Font &font, SDL_Renderer *renderer, ColorValue color) {
+    if (ptr_ != nullptr) {
+      SDL_DestroyTexture(ptr_);
+    }
+
+    SDL_Surface *surface = nullptr;
+
+    switch (color.type) {
+    case kColorRGB:
+      surface = TTF_RenderText_Solid(font.Get(), text.c_str(), color.Get());
+      break;
+    case kColorRGBA:
+      surface = TTF_RenderText_Blended(font.Get(), text.c_str(), color.Get());
+      break;
+    default:
+      break;
+    }
+
+    if (surface == nullptr) return false;
+
+    ptr_ = SDL_CreateTextureFromSurface(renderer, surface);
+    width_ = surface->w;
+    height_ = surface->h;
 
     SDL_FreeSurface(surface);
 

@@ -7,24 +7,29 @@ using namespace std;
 
 int main(int argc, char **argv) {
   SDL_Init(SDL_INIT_EVERYTHING);
+  TTF_Init();
 
   bool exit = false;
   SDL_Event e;
   WindowOption main_option;
 
-  main_option.height = 800;
-  main_option.width = 800;
+  main_option.height = 720;
+  main_option.width = 1280;
   main_option.title = "Playground";
 
   ManagedWindow win(new BasicWindow(main_option));
-  ManagedTexture texture(new Texture("C:\\workspace\\img2.png", kImagePNG, win->GetRenderer()));
-  auto flip_option = ProduceFlipOption(45, 200, 200, SDL_FLIP_HORIZONTAL);
-  auto dest = ProduceRect(200, 200, 320, 320);
+  ManagedFont font(new Font("C:\\workspace\\font.ttf", 30));
+  ManagedTexture texture(
+    new Texture("Sakura reincarnation", *font, win->GetRenderer(), ColorValue(0, 0, 0, 0)));
+  auto dest = ProduceRect(0, 0, texture->GetWidth(), texture->GetHeight());
+
+
   win->SetDrawColor(255, 255, 255, 255);
   win->Clear();
-
-  win->Copy(*texture, nullptr, &dest, flip_option);
+  win->Copy(*texture, nullptr, &dest);
   win->Present();
+
+  
 
   while (!exit) {
     while (SDL_PollEvent(&e) != 0) {
@@ -34,6 +39,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  TTF_Quit();
   SDL_Quit();
   return 0;
 }

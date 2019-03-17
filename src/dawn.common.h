@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <utility>
 #include <memory>
@@ -17,6 +18,7 @@
 #endif
 #pragma comment(lib,"SDL2_image.lib")
 #pragma comment(lib,"SDL2_mixer.lib")
+#pragma comment(lib,"SDL2_ttf.lib")
 #else
 /* Reserved for unix-like environment */
 #endif
