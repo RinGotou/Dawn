@@ -1,4 +1,6 @@
-#include "dawn.h"
+#include "dawn.window.h"
+#include "dawn.sound.h"
+
 #include <iostream>
 #include <vector>
 
@@ -6,8 +8,7 @@ using namespace dawn;
 using namespace std;
 
 int main(int argc, char **argv) {
-  SDL_Init(SDL_INIT_EVERYTHING);
-  TTF_Init();
+  EnvironmentSetup();
 
   bool exit = false;
   SDL_Event e;
@@ -20,16 +21,15 @@ int main(int argc, char **argv) {
   ManagedWindow win(new BasicWindow(main_option));
   ManagedFont font(new Font("C:\\workspace\\font.ttf", 30));
   ManagedTexture texture(
-    new Texture("Sakura reincarnation", *font, win->GetRenderer(), ColorValue(0, 0, 0, 0)));
+    new Texture("Playing:Moving Go On", *font, win->GetRenderer(), ColorValue(0, 0, 0, 0)));
   auto dest = ProduceRect(0, 0, texture->GetWidth(), texture->GetHeight());
-
-
+  ManagedMusic music(new Music("C:\\workspace\\moving_go_on.mp3"));
+  
   win->SetDrawColor(255, 255, 255, 255);
   win->Clear();
   win->Copy(*texture, nullptr, &dest);
   win->Present();
-
-  
+  music->Play();
 
   while (!exit) {
     while (SDL_PollEvent(&e) != 0) {
@@ -39,7 +39,6 @@ int main(int argc, char **argv) {
     }
   }
 
-  TTF_Quit();
-  SDL_Quit();
+  EnvironmentCleanup();
   return 0;
 }

@@ -9,6 +9,8 @@
 #include <string>
 #include <utility>
 #include <memory>
+#include <thread>
+#include <mutex>
 
 #if defined(_WIN32)
 #pragma comment(lib,"SDL2.lib")
@@ -29,4 +31,24 @@ namespace dawn {
   using std::string;
   using std::shared_ptr;
   using std::make_shared;
+
+  struct AudioOption {
+    int frequency;
+    uint16_t format;
+    int channels;
+    int chunksize;
+    int flags;
+  };
+
+  const AudioOption kDefaultAudioOpt = {
+    44100,
+    MIX_DEFAULT_FORMAT,
+    MIX_DEFAULT_CHANNELS,
+    2048,
+    MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG
+  };
+
+  int EnvironmentSetup(AudioOption audio = kDefaultAudioOpt);
+  void EnvironmentCleanup();
+  bool IsAudioSubsystemLoaded();
 }

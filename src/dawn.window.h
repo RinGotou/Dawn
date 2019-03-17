@@ -139,8 +139,10 @@ namespace dawn {
 
     Font() = delete;
 
-    Font(string path, int size) :
-      ptr_(TTF_OpenFont(path.c_str(),size)) {}
+    Font(string path, int size) : ptr_(nullptr) {
+      TTF_Init();
+      ptr_ = TTF_OpenFont(path.c_str(), size);
+    }
 
     TTF_Font *Get() { return ptr_; }
 
