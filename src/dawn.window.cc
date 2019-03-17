@@ -6,8 +6,24 @@ namespace dawn {
     return result;
   }
 
+  SDL_Point ProducePoint(int x, int y) {
+    SDL_Point result = { x,y };
+    return result;
+  }
+
+  FlipOption ProduceFlipOption(double angle, int x, int y, SDL_RendererFlip mode) {
+    FlipOption result = { angle, mode, ProducePoint(x,y) };
+    return result;
+  }
+
   bool BasicWindow::Copy(Texture &texture, SDL_Rect *src_rect, SDL_Rect *dest_rect) {
     return SDL_RenderCopy(renderer_, texture.Get(), src_rect, dest_rect) == 0;
+  }
+
+  bool BasicWindow::Copy(Texture & texture, SDL_Rect * src_rect, SDL_Rect * dest_rect, 
+    FlipOption option) {
+    return SDL_RenderCopyEx(renderer_, texture.Get(), src_rect, dest_rect,
+      option.angle_value, &option.point, option.mode) == 0;
   }
 
   bool BasicWindow::SetViewport(SDL_Rect pos) {

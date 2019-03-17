@@ -3,8 +3,11 @@
 
 namespace dawn {
   class Texture;
+  struct FlipOption;
 
   SDL_Rect ProduceRect(int x, int y, int w, int h);
+  SDL_Point ProducePoint(int x, int y);
+  FlipOption ProduceFlipOption(double angle, int x, int y, SDL_RendererFlip mode);
 
   enum ImageType {
     kImageJPG = IMG_INIT_JPG,
@@ -30,6 +33,12 @@ namespace dawn {
       title() {}
   };
 
+  struct FlipOption {
+    double angle_value;
+    SDL_RendererFlip mode;
+    SDL_Point point;
+  };
+
   class BasicWindow {
   public:
     virtual void Init(WindowOption option) {
@@ -48,8 +57,10 @@ namespace dawn {
 
     bool Copy(Texture &texture, 
       SDL_Rect *src_rect = nullptr, SDL_Rect *dest_rect = nullptr);
+    bool Copy(Texture &texture,
+      SDL_Rect *src_rect, SDL_Rect *dest_rect, FlipOption option);
 
-    void SetDrawColor(int r, int g, int b, int a) {
+    void SetDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
       SDL_SetRenderDrawColor(renderer_, r, g, b, a);
     }
 
@@ -80,16 +91,18 @@ namespace dawn {
     SDL_Renderer *renderer_;
   };
 
+  using ManagedWindow = shared_ptr<BasicWindow>;
+
   enum ColorValueType {
     kColorRGB, kColorRGBA
   };
 
   struct ColorValue {
     ColorValueType type;
-    int r;
-    int g;
-    int b;
-    int a;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
 
     ColorValue() :
       type(kColorRGB),
@@ -128,5 +141,19 @@ namespace dawn {
       bool enable_colorkey = false, ColorValue key = ColorValue());
 
     auto Get() { return ptr_; }
+
+    bool SetColorMod(uint8_t r, uint8_t g, uint8_t b) {
+      return SDL_SetTextureColorMod(ptr_, r, g, b) == 0;
+    }
+
+    bool SetBlendMode(SDL_BlendMode mode) {
+      return SDL_SetTextureBlendMode(ptr_, mode) == 0;
+    }
+
+    bool SetAlpha(uint8_t a) {
+      return SDL_SetTextureAlphaMod(ptr_, a) == 0;
+    }
   };
+
+  using ManagedTexture = shared_ptr<Texture>;
 }
