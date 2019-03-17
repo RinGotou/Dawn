@@ -26,6 +26,8 @@ namespace dawn {
     auto GetType() {
       return Mix_GetMusicType(ptr_);
     }
+
+    bool Good() const { return ptr_ != nullptr; }
   };
 
   class SoundEffect {
