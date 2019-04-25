@@ -34,19 +34,4 @@
 *.app
 
 # Misc
-script.log
-event.log
-.vscode
-vsproject/Dawn/.vs/Dawn/v15
-vsproject/Dawn/Debug
-vsproject/Dawn/Release
-vsproject/Dawn/x64
-CMakeFiles
-cmake_install.cmake
-CMakeCache.txt
-src/CMakeFiles
-src/cmake_install.cmake
-Makefile
-Dawn
-src/Makefile
-src/Dawn
+vsproject
