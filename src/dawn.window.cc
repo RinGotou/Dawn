@@ -43,7 +43,7 @@ namespace dawn {
     }
 
     IMG_Init(type);
-    SDL_Surface *surface = IMG_Load(path.c_str());
+    SDL_Surface *surface = IMG_Load(path.data());
 
     if (surface == nullptr) return false;
 
@@ -83,10 +83,10 @@ namespace dawn {
 
     switch (color.type) {
     case kColorRGB:
-      surface = TTF_RenderText_Solid(font.Get(), text.c_str(), color.Get());
+      surface = TTF_RenderText_Solid(font.Get(), text.data(), color.Get());
       break;
     case kColorRGBA:
-      surface = TTF_RenderText_Blended(font.Get(), text.c_str(), color.Get());
+      surface = TTF_RenderText_Blended(font.Get(), text.data(), color.Get());
       break;
     default:
       break;

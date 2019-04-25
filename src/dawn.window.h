@@ -43,7 +43,7 @@ namespace dawn {
   public:
     virtual void Init(WindowOption option) {
       window_ = SDL_CreateWindow(
-        option.title.c_str(),
+        option.title.data(),
         option.x, 
         option.y, 
         option.width,
@@ -141,7 +141,7 @@ namespace dawn {
 
     Font(string path, int size) : ptr_(nullptr) {
       TTF_Init();
-      ptr_ = TTF_OpenFont(path.c_str(), size);
+      ptr_ = TTF_OpenFont(path.data(), size);
     }
 
     TTF_Font *Get() { return ptr_; }

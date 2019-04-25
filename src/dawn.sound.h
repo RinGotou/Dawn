@@ -17,7 +17,7 @@ namespace dawn {
 
     Music() = delete;
 
-    Music(string path) : ptr_(Mix_LoadMUS(path.c_str())) {}
+    Music(string path) : ptr_(Mix_LoadMUS(path.data())) {}
 
     Music(SDL_RWops *ops) : ptr_(Mix_LoadMUS_RW(ops,0)) {}
 
@@ -45,7 +45,7 @@ namespace dawn {
 
     SoundEffect() = delete;
 
-    SoundEffect(string path) : ptr_(Mix_LoadWAV(path.c_str())) {}
+    SoundEffect(string path) : ptr_(Mix_LoadWAV(path.data())) {}
 
     Channel Play(Channel channel = -1, int loop = 0, int tick = -1) {
       return Mix_PlayChannelTimed(channel, ptr_, loop, tick);
