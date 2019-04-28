@@ -29,7 +29,7 @@ namespace dawn {
       height(768),
       x(SDL_WINDOWPOS_CENTERED),
       y(SDL_WINDOWPOS_CENTERED),
-      flags(),
+      flags(SDL_WINDOW_ALLOW_HIGHDPI),
       title() {}
   };
 
