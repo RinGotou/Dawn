@@ -83,10 +83,10 @@ namespace dawn {
 
     switch (color.type) {
     case kColorRGB:
-      surface = TTF_RenderText_Solid(font.Get(), text.data(), color.Get());
+      surface = TTF_RenderUTF8_Solid(font.Get(), text.data(), color.Get());
       break;
     case kColorRGBA:
-      surface = TTF_RenderText_Blended(font.Get(), text.data(), color.Get());
+      surface = TTF_RenderUTF8_Blended(font.Get(), text.data(), color.Get());
       break;
     default:
       break;

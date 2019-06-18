@@ -72,6 +72,7 @@ namespace dawn {
     void Present() { SDL_RenderPresent(renderer_); }
     auto GetRenderer() { return renderer_; }
     auto GetWindow() { return window_; }
+    auto GetId() { return SDL_GetWindowID(window_); }
   public:
     virtual ~BasicWindow() {
       SDL_DestroyRenderer(renderer_);
