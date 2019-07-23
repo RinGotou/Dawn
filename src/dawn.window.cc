@@ -36,6 +36,19 @@ namespace dawn {
     return result;
   }
 
+  bool BasicWindow::InRange(SDL_Rect pos, SDL_Point point) {
+    int width = 0, height = 0;
+    SDL_GetWindowSize(window_, &width, &height);
+
+    if (pos.x > width || pos.y > height) return false;
+    int left = pos.x, right = pos.x + pos.w;
+    int top = pos.y, bottom = pos.y + pos.h;
+
+    bool result_x = point.x > left && point.x < right;
+    bool result_y = point.y > top && point.y < bottom;
+    return result_x && result_y;
+  }
+
   bool Texture::Init(string path, int type, SDL_Renderer *renderer,
     bool enable_colorkey, ColorValue key) {
     if (ptr_ != nullptr) {

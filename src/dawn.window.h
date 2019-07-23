@@ -40,6 +40,10 @@ namespace dawn {
   };
 
   class BasicWindow {
+  protected:
+    SDL_Window *window_;
+    SDL_Renderer *renderer_;
+
   public:
     virtual void Init(WindowOption option) {
       window_ = SDL_CreateWindow(
@@ -67,6 +71,8 @@ namespace dawn {
     bool SetViewport(SDL_Rect pos);
     SDL_Rect GetViewport();
 
+    bool InRange(SDL_Rect pos, SDL_Point point);
+
 
     void Clear() { SDL_RenderClear(renderer_); }
     void Present() { SDL_RenderPresent(renderer_); }
@@ -86,10 +92,6 @@ namespace dawn {
     BasicWindow(WindowOption option) {
       Init(option);
     }
-
-  protected:
-    SDL_Window *window_;
-    SDL_Renderer *renderer_;
   };
 
   using ManagedWindow = shared_ptr<BasicWindow>;
