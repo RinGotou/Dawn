@@ -12,10 +12,10 @@
 #include <thread>
 #include <mutex>
 
-#if defined(_WIN32)
+#ifdef _WIN32
 #pragma comment(lib,"SDL2.lib")
 #pragma comment(lib,"SDL2main.lib")
-#if defined(_DEBUG)
+#ifdef _DEBUG
 #pragma comment(lib,"SDL2test.lib")
 #endif
 #pragma comment(lib,"SDL2_image.lib")
