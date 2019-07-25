@@ -24,7 +24,6 @@ namespace dawn {
   
   bool PlainWindow::DrawElements() {
     bool result = true;
-    SDL_Rect src_rect, dest_rect;
 
     // Draw all elements sorted by priority(from bottom to top)
     for (auto it = elements_.rbegin(); it != elements_.rend(); ++it) {
@@ -98,5 +97,23 @@ namespace dawn {
     }
 
     return result;
+  }
+
+  bool PlainWindow::AddElement(string id, Element &element) {
+    int priority = element.GetPriority();
+    auto it = elements_.find(priority);
+
+    if (it == elements_.end()) {
+      elements_.insert(std::make_pair(priority, ElementLayer()));
+      it = elements_.find(priority);
+    }
+
+    auto element_it = it->second.find(id);
+
+    if (element_it != it->second.end()) return false;
+
+    it->second.insert(std::make_pair(id, element));
+
+    return true;
   }
 }

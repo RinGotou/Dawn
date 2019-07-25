@@ -1,4 +1,4 @@
-#include "dawn.window.h"
+#include "dawn.ui.h"
 #include "dawn.sound.h"
 
 #include <iostream>
@@ -17,19 +17,20 @@ int main(int argc, char **argv) {
   main_option.height = 720;
   main_option.width = 1280;
   main_option.title = "Playground";
+  main_option.flags = SDL_WINDOW_ALLOW_HIGHDPI;
 
-  ManagedWindow win(new BasicWindow(main_option));
-  ManagedFont font(new Font("C:\\workspace\\font.ttf", 30));
-  ManagedTexture texture(
-    new Texture("Playing:Moving Go On", *font, win->GetRenderer(), ColorValue(0, 0, 0, 0)));
-  auto dest = ProduceRect(0, 0, texture->GetWidth(), texture->GetHeight());
-  ManagedMusic music(new Music("C:\\workspace\\moving_go_on.mp3"));
-  
-  win->SetDrawColor(255, 255, 255, 255);
-  win->Clear();
-  win->Copy(*texture, nullptr, &dest);
-  win->Present();
-  music->Play();
+  PlainWindow window(main_option);
+  Texture image0("C:\\workspace\\img1.jpg", kImageJPG, window.GetRenderer());
+  Texture image1("C:\\workspace\\img2.png", kImagePNG, window.GetRenderer());
+
+  window.AddElement("image0", Element(image0, ProduceRect(0, 0, 400, 400)));
+  window.AddElement("image1", Element(image1, ProduceRect(200, 200, 400, 400)));
+
+  auto &element0 = *window.GetElementById("image0");
+  auto &element1 = *window.GetElementById("image1");
+  element0.SetPriority(1);
+
+  window.DrawElements();
 
   while (!exit) {
     while (SDL_PollEvent(&e) != 0) {
