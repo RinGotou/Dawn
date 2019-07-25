@@ -47,6 +47,7 @@ namespace dawn {
 
   using ElementLayer = map<string, Element>;
   using ElementMap = map<int, ElementLayer>;
+  using NamedElement = pair<const string, Element>;
 
   class PlainWindow : public BasicWindow {
   protected:
@@ -70,6 +71,7 @@ namespace dawn {
     bool SetElementCropper(string id, SDL_Rect cropper);
     bool ElementInRange(string id, SDL_Point point);
     bool AddElement(string id, Element &element);
+    NamedElement *FindElementByPoint(SDL_Point point);
 
     bool AddElement(string id, Element &&element) { 
       return AddElement(id, element); 

@@ -32,6 +32,15 @@ int main(int argc, char **argv) {
 
   window.DrawElements();
 
+  auto *clicked = window.FindElementByPoint(ProducePoint(250, 250));
+
+  if (clicked != nullptr) {
+    cout << clicked->first << endl;
+  }
+  else {
+    cout << "failed" << endl;
+  }
+
   while (!exit) {
     while (SDL_PollEvent(&e) != 0) {
       if (e.type == SDL_QUIT) {

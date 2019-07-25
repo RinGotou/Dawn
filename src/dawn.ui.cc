@@ -116,4 +116,18 @@ namespace dawn {
 
     return true;
   }
+
+  NamedElement *PlainWindow::FindElementByPoint(SDL_Point point) {
+    NamedElement *result = nullptr;
+
+    for (auto &layer : elements_) {
+      for (auto &element : layer.second) {
+        if (InRange(element.second.GetDestInfo(), point)) {
+          result = &element;
+        }
+      }
+    }
+
+    return result;
+  }
 }
