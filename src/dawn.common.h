@@ -11,6 +11,7 @@
 #include <memory>
 #include <thread>
 #include <mutex>
+#include <map>
 
 #ifdef _WIN32
 #pragma comment(lib,"SDL2.lib")
@@ -31,6 +32,7 @@ namespace dawn {
   using std::string;
   using std::shared_ptr;
   using std::make_shared;
+  using std::map;
 
   struct AudioOption {
     int frequency;

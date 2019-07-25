@@ -20,7 +20,7 @@ namespace dawn {
     return SDL_RenderCopy(renderer_, texture.Get(), src_rect, dest_rect) == 0;
   }
 
-  bool BasicWindow::Copy(Texture & texture, SDL_Rect * src_rect, SDL_Rect * dest_rect, 
+  bool BasicWindow::Copy(Texture &texture, SDL_Rect *src_rect, SDL_Rect *dest_rect, 
     FlipOption option) {
     return SDL_RenderCopyEx(renderer_, texture.Get(), src_rect, dest_rect,
       option.angle_value, &option.point, option.mode) == 0;
