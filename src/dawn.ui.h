@@ -81,4 +81,6 @@ namespace dawn {
       return FindElement(id); 
     }
   };
+
+  using ManagedPlainWindow = shared_ptr<PlainWindow>;
 }
