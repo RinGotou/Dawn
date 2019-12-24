@@ -52,21 +52,22 @@ namespace dawn {
   class PlainWindow : public BasicWindow {
   protected:
     ElementMap elements_;
+    bool real_time_;
 
     bool DrawSingleElement(Element &element);
-
     Element *FindElement(string id);
 
     bool IsElementExist(string id) { 
       return FindElement(id) != nullptr; 
     }
   public:
-    PlainWindow() : BasicWindow() {}
+    PlainWindow() : BasicWindow(), real_time_(false) {}
 
-    PlainWindow(WindowOption option) : BasicWindow(option) {}
+    PlainWindow(WindowOption option) : BasicWindow(option), real_time_(false) {}
 
     bool DrawElements();
     bool SetElementPosition(string id, SDL_Point point);
+    SDL_Point GetElementPosition(string id);
     bool SetElementSize(string id, int width, int height);
     bool SetElementCropper(string id, SDL_Rect cropper);
     bool ElementInRange(string id, SDL_Point point);
@@ -79,6 +80,10 @@ namespace dawn {
 
     Element *GetElementById(string id) { 
       return FindElement(id); 
+    }
+
+    void RealTimeRefreshingMode(bool value) {
+      real_time_ = value;
     }
   };
 

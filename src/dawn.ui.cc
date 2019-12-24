@@ -51,6 +51,21 @@ namespace dawn {
       result = false;
     }
 
+    if (real_time_) DrawElements();
+
+    return result;
+  }
+
+  SDL_Point PlainWindow::GetElementPosition(string id) {
+    auto *element = FindElement(id);
+    SDL_Point result = ProducePoint(0, 0);
+
+    if (element != nullptr) {
+      auto &dest = element->GetDestInfo();
+      result.x = dest.x;
+      result.y = dest.y;
+    }
+
     return result;
   }
 
@@ -67,6 +82,8 @@ namespace dawn {
       result = false;
     }
 
+    if (real_time_) DrawElements();
+
     return result;
   }
 
@@ -81,6 +98,8 @@ namespace dawn {
     else {
       result = false;
     }
+
+    if (real_time_) DrawElements();
 
     return result;
   }
@@ -113,6 +132,8 @@ namespace dawn {
     if (element_it != it->second.end()) return false;
 
     it->second.insert(std::make_pair(id, element));
+
+    if (real_time_) DrawElements();
 
     return true;
   }

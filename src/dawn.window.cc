@@ -32,7 +32,7 @@ namespace dawn {
 
   SDL_Rect BasicWindow::GetViewport() {
     SDL_Rect result;
-    SDL_RenderGetViewport(renderer_, &result);
+	SDL_RenderGetViewport(renderer_, &result);
     return result;
   }
 
