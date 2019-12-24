@@ -145,8 +145,10 @@ namespace dawn {
       for (auto &element : layer.second) {
         if (InRange(element.second.GetDestInfo(), point)) {
           result = &element;
+          break;
         }
       }
+      if (result != nullptr) break;
     }
 
     return result;
