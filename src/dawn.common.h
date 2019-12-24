@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <deque>
 #include <string>
 #include <utility>
 #include <memory>
@@ -29,6 +30,7 @@
 #define FRAMEWORK_ID "Dawn"
 
 namespace dawn {
+  using std::deque;
   using std::string;
   using std::shared_ptr;
   using std::make_shared;

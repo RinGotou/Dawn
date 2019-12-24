@@ -1,6 +1,29 @@
 #include "dawn.ui.h"
 
 namespace dawn {
+  NamedElement *ElementLayer::FindNamedElementByOrder(int64_t order) {
+    auto it = begin();
+    for (; it != end(); it++) {
+      if (it->second.order == order) break;
+    }
+
+    if (it != end()) return &(*it);
+
+    return nullptr;
+  }
+
+  void ElementLayer::ResortVector() {
+    size_t index = 0;
+    for (auto it = begin(); it != end(); it++) {
+      while (drawing_vec[index] != &it->second && index < drawing_vec.size()) {
+        index += 1;
+      }
+
+      if (index != drawing_vec.size()) it->second.order = index;
+      index = 0;
+    }
+  }
+
   bool PlainWindow::DrawSingleElement(Element &element) {
     return SDL_RenderCopy(renderer_, element.GetTexture(),
       &element.GetSrcInfo(), &element.GetDestInfo()) == 0;
@@ -27,8 +50,9 @@ namespace dawn {
 
     // Draw all elements sorted by priority(from bottom to top)
     for (auto it = elements_.rbegin(); it != elements_.rend(); ++it) {
-      for (auto &element : it->second) {
-        DrawSingleElement(element.second);
+      auto &drawing_vec = it->second.drawing_vec;
+      for (auto it = drawing_vec.rbegin(); it != drawing_vec.rend(); it++) {
+        DrawSingleElement(*(*it));
       }
     }
 
@@ -52,19 +76,6 @@ namespace dawn {
     }
 
     if (real_time_) DrawElements();
-
-    return result;
-  }
-
-  SDL_Point PlainWindow::GetElementPosition(string id) {
-    auto *element = FindElement(id);
-    SDL_Point result = ProducePoint(0, 0);
-
-    if (element != nullptr) {
-      auto &dest = element->GetDestInfo();
-      result.x = dest.x;
-      result.y = dest.y;
-    }
 
     return result;
   }
@@ -104,6 +115,19 @@ namespace dawn {
     return result;
   }
 
+  SDL_Point PlainWindow::GetElementPosition(string id) {
+    auto *element = FindElement(id);
+    SDL_Point result = ProducePoint(0, 0);
+
+    if (element != nullptr) {
+      auto &dest = element->GetDestInfo();
+      result.x = dest.x;
+      result.y = dest.y;
+    }
+
+    return result;
+  }
+
   bool PlainWindow::ElementInRange(string id, SDL_Point point) {
     bool result = true;
     auto *element = FindElement(id);
@@ -132,6 +156,9 @@ namespace dawn {
     if (element_it != it->second.end()) return false;
 
     it->second.insert(std::make_pair(id, element));
+    auto inserted_element_it = it->second.find(id);
+    it->second.drawing_vec.push_back(&(inserted_element_it->second));
+    inserted_element_it->second.order = it->second.drawing_vec.size() - 1;
 
     if (real_time_) DrawElements();
 
@@ -142,14 +169,90 @@ namespace dawn {
     NamedElement *result = nullptr;
 
     for (auto &layer : elements_) {
-      for (auto &element : layer.second) {
-        if (InRange(element.second.GetDestInfo(), point)) {
-          result = &element;
+      auto &drawing_vec = layer.second.drawing_vec;
+      for (size_t index = 0; index < drawing_vec.size(); index += 1) {
+        if (InRange(drawing_vec[index]->GetDestInfo(), point)) {
+          result = layer.second.FindNamedElementByOrder(index);
           break;
         }
       }
+
       if (result != nullptr) break;
     }
+
+    return result;
+  }
+
+  bool PlainWindow::DisposeElement(string id) {
+    bool result = false;
+    ElementLayer::iterator it;
+
+    for (auto &layer : elements_) {
+      it = layer.second.find(id);
+
+      if (it != layer.second.end()) {
+        deque<Element *>::iterator target_it = layer.second.drawing_vec.begin();
+        for (int64_t i = 0; i < it->second.order; i += 1) target_it++;
+        layer.second.drawing_vec.erase(target_it);
+        layer.second.erase(id);
+        result = true;
+        break;
+      }
+    }
+
+    if (real_time_) DrawElements();
+
+    return result;
+  }
+
+  bool PlainWindow::SetElementOnTop(string id) {
+    bool result = false;
+    ElementLayer::iterator it;
+
+    for (auto &layer : elements_) {
+      it = layer.second.find(id);
+
+      if (it != layer.second.end()) {
+        auto &drawing_vec = layer.second.drawing_vec;
+        deque<Element *>::iterator target_it = drawing_vec.begin();
+        for (int64_t i = 0; i < it->second.order; i += 1) target_it++;
+        Element *selected = *target_it;
+        drawing_vec.erase(target_it);
+        drawing_vec.push_front(selected);
+        it->second.order = 0;
+        layer.second.ResortVector();
+        result = true;
+        break;
+      }
+    }
+
+    if (real_time_) DrawElements();
+
+    return result;
+  }
+
+  bool PlainWindow::SetElementOnBottom(string id) {
+    bool result = false;
+    ElementLayer::iterator it;
+
+    for (auto &layer : elements_) {
+      it = layer.second.find(id);
+
+      if (it != layer.second.end()) {
+        auto &drawing_vec = layer.second.drawing_vec;
+        deque<Element *>::iterator target_it = drawing_vec.begin();
+        for (int64_t i = 0; i < it->second.order; i += 1) target_it++;
+        Element *selected = *target_it;
+        drawing_vec.erase(target_it);
+        drawing_vec.push_back(selected);
+        it->second.order = drawing_vec.size() - 1;
+        layer.second.ResortVector();
+        result = true;
+        break;
+      }
+    }
+
+    if (real_time_) DrawElements();
 
     return result;
   }

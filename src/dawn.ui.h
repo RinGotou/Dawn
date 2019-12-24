@@ -13,15 +13,19 @@ namespace dawn {
     SDL_Texture *texture_;
 
   public:
-    Element() = delete;
+    int64_t order;
+
+  public:
+    Element() {}
 
     Element(Texture &texture, SDL_Rect dest) :
       src_(ProduceRect(0, 0, texture.GetWidth(), texture.GetHeight())),
-      dest_(dest), priority_(0), texture_(texture.Get()) 
+      dest_(dest), priority_(0), texture_(texture.Get()), order(0)
     {}
 
     Element(Texture &texture, SDL_Rect src, SDL_Rect dest) :
-      src_(src), dest_(dest), priority_(0), texture_(texture.Get())
+      src_(src), dest_(dest), priority_(0), texture_(texture.Get()),
+      order(0)
     {}
 
     SDL_Texture *GetTexture() { 
@@ -45,9 +49,18 @@ namespace dawn {
     int GetPriority() const { return priority_; }
   };
 
-  using ElementLayer = map<string, Element>;
-  using ElementMap = map<int, ElementLayer>;
+  //using ElementLayer = map<string, Element>;
   using NamedElement = pair<const string, Element>;
+
+  class ElementLayer : public map<string, Element> {
+  public:
+    deque<Element *> drawing_vec;
+
+    NamedElement *FindNamedElementByOrder(int64_t order);
+    void ResortVector();
+  };
+
+  using ElementMap = map<int, ElementLayer>;
 
   class PlainWindow : public BasicWindow {
   protected:
@@ -67,12 +80,15 @@ namespace dawn {
 
     bool DrawElements();
     bool SetElementPosition(string id, SDL_Point point);
-    SDL_Point GetElementPosition(string id);
     bool SetElementSize(string id, int width, int height);
     bool SetElementCropper(string id, SDL_Rect cropper);
+    SDL_Point GetElementPosition(string id);
     bool ElementInRange(string id, SDL_Point point);
     bool AddElement(string id, Element &element);
     NamedElement *FindElementByPoint(SDL_Point point);
+    bool DisposeElement(string id);
+    bool SetElementOnTop(string id);
+    bool SetElementOnBottom(string id);
 
     bool AddElement(string id, Element &&element) { 
       return AddElement(id, element); 
