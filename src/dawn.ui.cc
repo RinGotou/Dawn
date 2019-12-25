@@ -47,6 +47,7 @@ namespace dawn {
   
   bool PlainWindow::DrawElements() {
     bool result = true;
+    Clear();
 
     // Draw all elements sorted by priority(from bottom to top)
     for (auto it = elements_.rbegin(); it != elements_.rend(); ++it) {
@@ -255,5 +256,9 @@ namespace dawn {
     if (real_time_) DrawElements();
 
     return result;
+  }
+
+  void PlainWindow::SetWindowTitle(string title) {
+    SDL_SetWindowTitle(window_, title.data());
   }
 }
