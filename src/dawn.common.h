@@ -13,6 +13,7 @@
 #include <thread>
 #include <mutex>
 #include <map>
+#include <unordered_map>
 
 #ifdef _WIN32
 #pragma comment(lib,"SDL2.lib")
@@ -37,6 +38,9 @@ namespace dawn {
   using std::map;
   using std::pair;
 
+  class BasicWindow;
+
+  using WindowManagementStorage = std::unordered_map<Uint32, BasicWindow *>;
   struct AudioOption {
     int frequency;
     uint16_t format;
@@ -56,4 +60,7 @@ namespace dawn {
   int EnvironmentSetup(AudioOption audio = kDefaultAudioOpt);
   void EnvironmentCleanup();
   bool IsAudioSubsystemLoaded();
+  void RegisterWindow(BasicWindow *window, Uint32 id);
+  bool DisposeWindow(Uint32 id);
+  BasicWindow *GetWindowById(Uint32 id);
 }

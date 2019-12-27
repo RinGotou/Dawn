@@ -81,16 +81,17 @@ namespace dawn {
     auto GetId() { return SDL_GetWindowID(window_); }
   public:
     virtual ~BasicWindow() {
+      auto id = SDL_GetWindowID(window_);
+      DisposeWindow(id);
       SDL_DestroyRenderer(renderer_);
       SDL_DestroyWindow(window_);
     }
 
-    BasicWindow() :
-      window_(nullptr),
-      renderer_(nullptr) {}
+    BasicWindow() = delete;
 
     BasicWindow(WindowOption option) {
       Init(option);
+      RegisterWindow(this, SDL_GetWindowID(window_));
     }
   };
 

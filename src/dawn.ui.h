@@ -74,7 +74,7 @@ namespace dawn {
       return FindElement(id) != nullptr; 
     }
   public:
-    PlainWindow() : BasicWindow(), real_time_(false) {}
+    PlainWindow() = delete;
 
     PlainWindow(WindowOption option) : BasicWindow(option), real_time_(false) {}
 
