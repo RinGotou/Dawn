@@ -15,6 +15,7 @@
 #include <map>
 #include <unordered_map>
 
+//for Windows(MSVC) environment
 #ifdef _WIN32
 #pragma comment(lib,"SDL2.lib")
 #pragma comment(lib,"SDL2main.lib")
@@ -24,8 +25,6 @@
 #pragma comment(lib,"SDL2_image.lib")
 #pragma comment(lib,"SDL2_mixer.lib")
 #pragma comment(lib,"SDL2_ttf.lib")
-#else
-/* Reserved for unix-like environment */
 #endif
 
 #define FRAMEWORK_ID "Dawn"

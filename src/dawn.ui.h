@@ -16,7 +16,7 @@ namespace dawn {
     int64_t order;
 
   public:
-    Element() {}
+    Element() = delete;
 
     Element(Texture &texture, SDL_Rect dest) :
       src_(ProduceRect(0, 0, texture.GetWidth(), texture.GetHeight())),

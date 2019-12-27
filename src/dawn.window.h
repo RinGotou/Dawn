@@ -164,7 +164,7 @@ namespace dawn {
       SDL_DestroyTexture(ptr_);
     }
 
-    Texture() : ptr_(nullptr) {}
+    Texture() : ptr_(nullptr), width_(0), height_(0) {}
 
     Texture(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue()) :
