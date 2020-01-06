@@ -43,6 +43,7 @@ namespace dawn {
   protected:
     SDL_Window *window_;
     SDL_Renderer *renderer_;
+    bool delegator_;
 
   public:
     virtual void Init(WindowOption option) {
@@ -81,18 +82,24 @@ namespace dawn {
     auto GetId() { return SDL_GetWindowID(window_); }
   public:
     virtual ~BasicWindow() {
-      auto id = SDL_GetWindowID(window_);
-      DisposeWindow(id);
-      SDL_DestroyRenderer(renderer_);
-      SDL_DestroyWindow(window_);
+      if (!delegator_) {
+        auto id = SDL_GetWindowID(window_);
+        DisposeWindow(id);
+        SDL_DestroyRenderer(renderer_);
+        SDL_DestroyWindow(window_);
+      }
     }
 
     BasicWindow() = delete;
 
     BasicWindow(WindowOption option) {
       Init(option);
+      delegator_ = false;
       RegisterWindow(this, SDL_GetWindowID(window_));
     }
+
+    BasicWindow(SDL_Window *window, SDL_Renderer *renderer) :
+      window_(window), renderer_(renderer), delegator_(true) {}
   };
 
   using ManagedWindow = shared_ptr<BasicWindow>;
@@ -130,6 +137,8 @@ namespace dawn {
     }
   };
 
+
+  //TODO:delegator mode
   class Font {
   protected:
     TTF_Font *ptr_;
@@ -158,22 +167,23 @@ namespace dawn {
     SDL_Texture *ptr_;
     int width_;
     int height_;
+    bool delegator_;
 
   public:
     virtual ~Texture() {
-      SDL_DestroyTexture(ptr_);
+      if(!delegator_) SDL_DestroyTexture(ptr_);
     }
 
-    Texture() : ptr_(nullptr), width_(0), height_(0) {}
+    Texture() : ptr_(nullptr), width_(0), height_(0), delegator_(false) {}
 
     Texture(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue()) :
-      ptr_(nullptr), width_(-1), height_(-1) {
+      ptr_(nullptr), width_(-1), height_(-1), delegator_(false) {
       Init(path, type, renderer, enable_colorkey, key);
     }
 
     Texture(string text, Font &font, SDL_Renderer *renderer, ColorValue color) : 
-      ptr_(nullptr), width_(-1), height_(-1) {
+      ptr_(nullptr), width_(-1), height_(-1), delegator_(false) {
       Init(text, font, renderer, color);
     }
 
