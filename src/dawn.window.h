@@ -55,9 +55,14 @@ namespace dawn {
         option.height,
         option.flags
       );
+#ifdef _WIN32
       renderer_ = SDL_CreateRenderer(window_, -1, 
         SDL_RENDERER_ACCELERATED |
         SDL_RENDERER_PRESENTVSYNC);
+#else
+      renderer_ = SDL_CreateRenderer(window_, -1,
+        SDL_RENDERER_ACCELERATED);
+#endif
     }
 
     bool Copy(Texture &texture, 
