@@ -11,25 +11,35 @@ namespace dawn {
     SDL_Rect dest_;
     int priority_;
     SDL_Texture *texture_;
+    bool self_held;
 
   public:
     int64_t order;
 
   public:
+    ~Element() { if (self_held) SDL_DestroyTexture(texture_); }
+
     Element() = delete;
 
     Element(Texture &texture, SDL_Rect dest) :
       src_(ProduceRect(0, 0, texture.GetWidth(), texture.GetHeight())),
-      dest_(dest), priority_(0), texture_(texture.Get()), order(0)
+      dest_(dest), priority_(0), texture_(texture.Get()), order(0),
+      self_held(false)
     {}
 
     Element(Texture &texture, SDL_Rect src, SDL_Rect dest) :
       src_(src), dest_(dest), priority_(0), texture_(texture.Get()),
-      order(0)
+      order(0), self_held(false)
     {}
+
+    //Element(Texture *texture, SDL_Rect src, SDL_Rect dest) 
 
     SDL_Texture *GetTexture() { 
       return texture_; 
+    }
+
+    void SetTexture(SDL_Texture *texture) {
+      texture_ = texture;
     }
 
     SDL_Rect &GetSrcInfo() {

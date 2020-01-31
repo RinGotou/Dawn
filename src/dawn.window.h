@@ -186,6 +186,20 @@ namespace dawn {
       Init(text, font, renderer, color);
     }
 
+    Texture(Texture &rhs) {
+      std::swap(ptr_, rhs.ptr_);
+      std::swap(width_, rhs.width_);
+      std::swap(height_, rhs.height_);
+      std::swap(delegator_, rhs.delegator_);
+    }
+
+    Texture(Texture &&rhs) {
+      std::swap(ptr_, rhs.ptr_);
+      std::swap(width_, rhs.width_);
+      std::swap(height_, rhs.height_);
+      std::swap(delegator_, rhs.delegator_);
+    }
+
   public:
     bool Init(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue());
@@ -204,6 +218,13 @@ namespace dawn {
 
     bool SetAlpha(uint8_t a) {
       return SDL_SetTextureAlphaMod(ptr_, a) == 0;
+    }
+
+    void operator=(Texture &&rhs) {
+      std::swap(ptr_, rhs.ptr_);
+      std::swap(width_, rhs.width_);
+      std::swap(height_, rhs.height_);
+      std::swap(delegator_, rhs.delegator_);
     }
 
     int GetWidth() const { return width_; }
