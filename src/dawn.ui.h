@@ -100,6 +100,7 @@ namespace dawn {
     bool DisposeElement(string id);
     bool SetElementOnTop(string id);
     bool SetElementOnBottom(string id);
+    bool SetElementTexture(string id, Texture &texture);
     void SetWindowTitle(string title);
 
     bool AddElement(string id, Element &&element) { 

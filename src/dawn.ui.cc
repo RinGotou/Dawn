@@ -258,6 +258,25 @@ namespace dawn {
     return result;
   }
 
+  bool PlainWindow::SetElementTexture(string id, Texture &texture) {
+    bool result = false;
+    ElementLayer::iterator it;
+
+    for (auto &layer : elements_) {
+      it = layer.second.find(id);
+
+      if (it != layer.second.end()) {
+        it->second.SetTexture(texture.Get());
+        result = true;
+        break;
+      }
+    }
+
+    if (real_time_) DrawElements();
+
+    return result;
+  }
+
   void PlainWindow::SetWindowTitle(string title) {
     SDL_SetWindowTitle(window_, title.data());
   }

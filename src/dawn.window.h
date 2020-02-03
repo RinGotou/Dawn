@@ -166,23 +166,22 @@ namespace dawn {
     SDL_Texture *ptr_;
     int width_;
     int height_;
-    bool delegator_;
 
   public:
     virtual ~Texture() {
-      if(!delegator_) SDL_DestroyTexture(ptr_);
+      if (ptr_ != nullptr) SDL_DestroyTexture(ptr_);
     }
 
-    Texture() : ptr_(nullptr), width_(0), height_(0), delegator_(false) {}
+    Texture() : ptr_(nullptr), width_(0), height_(0) {}
 
     Texture(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue()) :
-      ptr_(nullptr), width_(-1), height_(-1), delegator_(false) {
+      ptr_(nullptr), width_(-1), height_(-1) {
       Init(path, type, renderer, enable_colorkey, key);
     }
 
     Texture(string text, Font &font, SDL_Renderer *renderer, ColorValue color) : 
-      ptr_(nullptr), width_(-1), height_(-1), delegator_(false) {
+      ptr_(nullptr), width_(-1), height_(-1) {
       Init(text, font, renderer, color);
     }
 
@@ -190,14 +189,12 @@ namespace dawn {
       std::swap(ptr_, rhs.ptr_);
       std::swap(width_, rhs.width_);
       std::swap(height_, rhs.height_);
-      std::swap(delegator_, rhs.delegator_);
     }
 
     Texture(Texture &&rhs) {
       std::swap(ptr_, rhs.ptr_);
       std::swap(width_, rhs.width_);
       std::swap(height_, rhs.height_);
-      std::swap(delegator_, rhs.delegator_);
     }
 
   public:
@@ -224,7 +221,6 @@ namespace dawn {
       std::swap(ptr_, rhs.ptr_);
       std::swap(width_, rhs.width_);
       std::swap(height_, rhs.height_);
-      std::swap(delegator_, rhs.delegator_);
     }
 
     int GetWidth() const { return width_; }
