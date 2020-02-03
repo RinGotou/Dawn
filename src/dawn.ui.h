@@ -61,6 +61,7 @@ namespace dawn {
 
   //using ElementLayer = map<string, Element>;
   using NamedElement = pair<const string, Element>;
+  using ManagedElement = shared_ptr<Element>;
 
   class ElementLayer : public map<string, Element> {
   public:
