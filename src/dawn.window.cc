@@ -1,18 +1,8 @@
 #include "dawn.window.h"
 
 namespace dawn {
-  SDL_Rect ProduceRect(int x, int y, int w, int h) {
-    SDL_Rect result = { x,y,w,h };
-    return result;
-  }
-
-  SDL_Point ProducePoint(int x, int y) {
-    SDL_Point result = { x,y };
-    return result;
-  }
-
   FlipOption ProduceFlipOption(double angle, int x, int y, SDL_RendererFlip mode) {
-    FlipOption result = { angle, mode, ProducePoint(x,y) };
+    FlipOption result = { angle, mode, SDL_Point{ x, y } };
     return result;
   }
 
@@ -61,7 +51,7 @@ namespace dawn {
     if (surface == nullptr) return false;
 
     if (enable_colorkey) {
-      uint32_t value;
+      uint32_t value = 0;
       switch (key.type) {
       case kColorRGB:
         value = SDL_MapRGB(surface->format, key.r, key.g, key.b);

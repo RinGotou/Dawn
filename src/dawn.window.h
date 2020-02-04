@@ -5,8 +5,6 @@ namespace dawn {
   class Texture;
   struct FlipOption;
 
-  SDL_Rect ProduceRect(int x, int y, int w, int h);
-  SDL_Point ProducePoint(int x, int y);
   FlipOption ProduceFlipOption(double angle, int x, int y, SDL_RendererFlip mode);
 
   enum ImageType {
@@ -66,6 +64,10 @@ namespace dawn {
 
     void SetDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
       SDL_SetRenderDrawColor(renderer_, r, g, b, a);
+    }
+
+    void SetSize(int width, int height) {
+      SDL_SetWindowSize(window_, width, height);
     }
 
     bool SetViewport(SDL_Rect pos);

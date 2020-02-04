@@ -44,6 +44,11 @@ namespace dawn {
 
     return result;
   }
+
+  void PlainWindow::ClearElements() {
+    elements_.clear();
+    if (real_time_) Clear();
+  }
   
   bool PlainWindow::DrawElements() {
     bool result = true;
@@ -99,6 +104,23 @@ namespace dawn {
     return result;
   }
 
+  bool PlainWindow::SetElementDestination(string id, SDL_Rect dest) {
+    bool result = true;
+    auto *element = FindElement(id);
+
+    if (element != nullptr) {
+      auto &elem_dest = element->GetDestInfo();
+      elem_dest = dest;
+    }
+    else {
+      result = false;
+    }
+
+    if (real_time_) DrawElements();
+
+    return result;
+  }
+
   bool PlainWindow::SetElementCropper(string id, SDL_Rect cropper) {
     bool result = true;
     auto *element = FindElement(id);
@@ -118,12 +140,47 @@ namespace dawn {
 
   SDL_Point PlainWindow::GetElementPosition(string id) {
     auto *element = FindElement(id);
-    SDL_Point result = ProducePoint(0, 0);
+    SDL_Point result{ 0, 0 };
 
     if (element != nullptr) {
       auto &dest = element->GetDestInfo();
       result.x = dest.x;
       result.y = dest.y;
+    }
+
+    return result;
+  }
+
+  SDL_Point PlainWindow::GetElementSize(string id) {
+    auto *element = FindElement(id);
+    SDL_Point result{ 0, 0 };
+
+    if (element != nullptr) {
+      auto &dest = element->GetDestInfo();
+      result.x = dest.w;
+      result.y = dest.h;
+    }
+
+    return result;
+  }
+
+  SDL_Rect PlainWindow::GetElementDestination(string id) {
+    auto *element = FindElement(id);
+    SDL_Rect result{};
+
+    if (element != nullptr) {
+      result = element->GetDestInfo();
+    }
+
+    return result;
+  }
+
+  SDL_Rect PlainWindow::GetElementCropper(string id) {
+    auto *element = FindElement(id);
+    SDL_Rect result{};
+
+    if (element != nullptr) {
+      result = element->GetSrcInfo();
     }
 
     return result;

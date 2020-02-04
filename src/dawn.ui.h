@@ -22,7 +22,7 @@ namespace dawn {
     Element() = delete;
 
     Element(Texture &texture, SDL_Rect dest) :
-      src_(ProduceRect(0, 0, texture.GetWidth(), texture.GetHeight())),
+      src_{ 0, 0, texture.GetWidth(), texture.GetHeight() },
       dest_(dest), priority_(0), texture_(texture.Get()), order(0),
       self_held(false)
     {}
@@ -31,8 +31,6 @@ namespace dawn {
       src_(src), dest_(dest), priority_(0), texture_(texture.Get()),
       order(0), self_held(false)
     {}
-
-    //Element(Texture *texture, SDL_Rect src, SDL_Rect dest) 
 
     SDL_Texture *GetTexture() { 
       return texture_; 
@@ -89,11 +87,16 @@ namespace dawn {
 
     PlainWindow(WindowOption option) : BasicWindow(option), real_time_(false) {}
 
+    void ClearElements();
     bool DrawElements();
     bool SetElementPosition(string id, SDL_Point point);
     bool SetElementSize(string id, int width, int height);
+    bool SetElementDestination(string id, SDL_Rect dest);
     bool SetElementCropper(string id, SDL_Rect cropper);
     SDL_Point GetElementPosition(string id);
+    SDL_Point GetElementSize(string id);
+    SDL_Rect GetElementDestination(string id);
+    SDL_Rect GetElementCropper(string id);
     bool ElementInRange(string id, SDL_Point point);
     bool AddElement(string id, Element &element);
     NamedElement *FindElementByPoint(SDL_Point point);
