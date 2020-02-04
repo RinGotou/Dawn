@@ -15,6 +15,10 @@
 #include <map>
 #include <unordered_map>
 
+#ifdef _DEBUG
+#include <cstdio>
+#endif
+
 //for Windows(MSVC) environment
 #ifdef _WIN32
 #pragma comment(lib,"SDL2.lib")

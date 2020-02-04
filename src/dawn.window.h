@@ -81,6 +81,8 @@ namespace dawn {
     auto GetRenderer() { return renderer_; }
     auto GetWindow() { return window_; }
     auto GetId() { return SDL_GetWindowID(window_); }
+    void Hide() { SDL_HideWindow(window_); }
+    void Show() { SDL_ShowWindow(window_); }
   public:
     virtual ~BasicWindow() {
       if (!delegator_) {
