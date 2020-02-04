@@ -114,6 +114,10 @@ namespace dawn {
     void RealTimeRefreshingMode(bool value) {
       real_time_ = value;
     }
+
+    bool GetRefreshingMode() const {
+      return real_time_;
+    }
   };
 
   using ManagedPlainWindow = shared_ptr<PlainWindow>;
