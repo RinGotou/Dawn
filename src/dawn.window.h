@@ -86,8 +86,6 @@ namespace dawn {
   public:
     virtual ~BasicWindow() {
       if (!delegator_) {
-        auto id = SDL_GetWindowID(window_);
-        DisposeWindow(id);
         SDL_DestroyRenderer(renderer_);
         SDL_DestroyWindow(window_);
       }
@@ -98,7 +96,7 @@ namespace dawn {
     BasicWindow(WindowOption option) {
       Init(option);
       delegator_ = false;
-      RegisterWindow(this, SDL_GetWindowID(window_));
+
     }
 
     BasicWindow(SDL_Window *window, SDL_Renderer *renderer) :

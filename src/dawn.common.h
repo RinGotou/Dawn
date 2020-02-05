@@ -47,9 +47,9 @@ namespace dawn {
   using std::map;
   using std::pair;
 
-  class BasicWindow;
+  class PlainWindow;
 
-  using WindowManagementStorage = std::unordered_map<Uint32, BasicWindow *>;
+  using WindowManagementStorage = std::unordered_map<Uint32, PlainWindow *>;
   struct AudioOption {
     int frequency;
     uint16_t format;
@@ -69,9 +69,10 @@ namespace dawn {
   int EnvironmentSetup(AudioOption audio = kDefaultAudioOpt);
   void EnvironmentCleanup();
   bool IsAudioSubsystemLoaded();
-  void RegisterWindow(BasicWindow *window, Uint32 id);
+  void RegisterWindow(PlainWindow *window, Uint32 id);
   bool DisposeWindow(Uint32 id);
-  BasicWindow *GetWindowById(Uint32 id);
+  PlainWindow *GetWindowById(Uint32 id);
+  WindowManagementStorage &GetWindowMgmtStorage();
 
   wstring s2ws(const string &s);
   string ws2s(const wstring &s);

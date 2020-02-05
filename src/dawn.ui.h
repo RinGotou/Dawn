@@ -83,9 +83,16 @@ namespace dawn {
       return FindElement(id) != nullptr; 
     }
   public:
+    virtual ~PlainWindow() {
+      auto id = SDL_GetWindowID(window_);
+      DisposeWindow(id);
+    }
+
     PlainWindow() = delete;
 
-    PlainWindow(WindowOption option) : BasicWindow(option), real_time_(false) {}
+    PlainWindow(WindowOption option) : BasicWindow(option), real_time_(false) {
+      RegisterWindow(this, SDL_GetWindowID(window_));
+    }
 
     void ClearElements();
     bool DrawElements();
@@ -124,4 +131,6 @@ namespace dawn {
   };
 
   using ManagedPlainWindow = shared_ptr<PlainWindow>;
+
+  void ForceRefreshingAllWindow();
 }

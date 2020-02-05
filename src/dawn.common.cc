@@ -52,7 +52,7 @@ namespace dawn {
     return GetAudioSubsystemState();
   }
 
-  void RegisterWindow(BasicWindow *window, Uint32 id) {
+  void RegisterWindow(PlainWindow *window, Uint32 id) {
     auto &storage = GetWindowMgmtStorage();
     storage.insert(std::make_pair(id, window));
   }
@@ -70,7 +70,7 @@ namespace dawn {
     return result;
   }
 
-  BasicWindow *GetWindowById(Uint32 id) {
+  PlainWindow *GetWindowById(Uint32 id) {
     auto &storage = GetWindowMgmtStorage();
     auto it = storage.find(id);
     if (it != storage.end()) return it->second;
