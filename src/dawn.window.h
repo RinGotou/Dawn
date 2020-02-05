@@ -171,11 +171,26 @@ namespace dawn {
     int width_;
     int height_;
 
+  protected:
+    int CalculateTextWidth(deque<string> &text, Font &font);
+
+    int CalculateTextHeight(deque<string> &text, Font &font) {
+      int line_height;
+      TTF_SizeUTF8(font.Get(), text.front().data(), nullptr, &line_height);
+      return int(text.size()) * line_height;
+    }
+
+    void WrappingSingleUnit(string line, Uint32 wrap_length,
+      Font &font, deque<string> &output);
+
+    void SpiltStringByWrapLength(string text, Uint32 wrap_length, 
+      Font &font, deque<string> &output);
+
   public:
     virtual ~Texture() {
       if (ptr_ != nullptr) SDL_DestroyTexture(ptr_);
     }
-
+    
     Texture() : ptr_(nullptr), width_(0), height_(0) {}
 
     Texture(string path, int type, SDL_Renderer *renderer,
@@ -184,9 +199,10 @@ namespace dawn {
       Init(path, type, renderer, enable_colorkey, key);
     }
 
-    Texture(string text, Font &font, SDL_Renderer *renderer, ColorValue color) : 
+    Texture(string text, Font &font, SDL_Renderer *renderer, 
+      ColorValue color, Uint32 wrap_length = 0) :
       ptr_(nullptr), width_(-1), height_(-1) {
-      Init(text, font, renderer, color);
+      Init(text, font, renderer, color, wrap_length);
     }
 
     Texture(Texture &rhs) {
@@ -205,7 +221,8 @@ namespace dawn {
     bool Init(string path, int type, SDL_Renderer *renderer,
       bool enable_colorkey = false, ColorValue key = ColorValue());
 
-    bool Init(string text, Font &font, SDL_Renderer *renderer, ColorValue color);
+    bool Init(string text, Font &font, SDL_Renderer *renderer, 
+      ColorValue color, Uint32 wrap_length = 0);
 
     auto Get() { return ptr_; }
 

@@ -14,6 +14,9 @@
 #include <mutex>
 #include <map>
 #include <unordered_map>
+#ifdef _MSC_VER
+#include <Windows.h>
+#endif
 
 #ifdef _DEBUG
 #include <cstdio>
@@ -23,6 +26,7 @@
 #ifdef _WIN32
 #pragma comment(lib,"SDL2.lib")
 #pragma comment(lib,"SDL2main.lib")
+#pragma warning(disable:4996)
 #ifdef _DEBUG
 #pragma comment(lib,"SDL2test.lib")
 #endif
@@ -32,10 +36,12 @@
 #endif
 
 #define FRAMEWORK_ID "Dawn"
+#define DEFAULT_DEPTH 32
 
 namespace dawn {
   using std::deque;
   using std::string;
+  using std::wstring;
   using std::shared_ptr;
   using std::make_shared;
   using std::map;
@@ -66,4 +72,7 @@ namespace dawn {
   void RegisterWindow(BasicWindow *window, Uint32 id);
   bool DisposeWindow(Uint32 id);
   BasicWindow *GetWindowById(Uint32 id);
+
+  wstring s2ws(const string &s);
+  string ws2s(const wstring &s);
 }
