@@ -3,12 +3,22 @@
 
 namespace dawn {
   /* Experimental implementation. BE CAREFUL */
+  enum class ElementSpecType{};
 
-  /* Basic UI element class */
+  struct EventSpecInfo {
+    virtual ~EventSpecInfo() {}
+  };
+
+  struct ElementSpecification {
+    ElementSpecType type;
+    SDL_Texture *hover_image;
+  };
+
   class Element {
   protected:
     SDL_Rect src_;
     SDL_Rect dest_;
+    ElementSpecification spec_;
     int priority_;
     SDL_Texture *texture_;
     bool self_held;
@@ -31,6 +41,8 @@ namespace dawn {
       src_(src), dest_(dest), priority_(0), texture_(texture.Get()),
       order(0), self_held(false)
     {}
+
+    bool Draw(SDL_Renderer *renderer);
 
     SDL_Texture *GetTexture() { 
       return texture_; 
@@ -76,7 +88,6 @@ namespace dawn {
     ElementMap elements_;
     bool real_time_;
 
-    bool DrawSingleElement(Element &element);
     Element *FindElement(string id);
 
     bool IsElementExist(string id) { 
@@ -96,6 +107,8 @@ namespace dawn {
 
     void ClearElements();
     bool DrawElements();
+    //TODO:Update by events
+    void UpdateElementByEventType(string id, SDL_EventType type, EventSpecInfo *info = nullptr);
     bool SetElementPosition(string id, SDL_Point point);
     bool SetElementSize(string id, int width, int height);
     bool SetElementDestination(string id, SDL_Rect dest);

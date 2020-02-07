@@ -1,6 +1,10 @@
 #include "dawn.ui.h"
 
 namespace dawn {
+  bool Element::Draw(SDL_Renderer *renderer) {
+    return SDL_RenderCopy(renderer, texture_, &src_, &dest_) == 0;
+  }
+
   NamedElement *ElementLayer::FindNamedElementByOrder(int64_t order) {
     auto it = begin();
     for (; it != end(); it++) {
@@ -22,11 +26,6 @@ namespace dawn {
       if (index != drawing_vec.size()) it->second.order = index;
       index = 0;
     }
-  }
-
-  bool PlainWindow::DrawSingleElement(Element &element) {
-    return SDL_RenderCopy(renderer_, element.GetTexture(),
-      &element.GetSrcInfo(), &element.GetDestInfo()) == 0;
   }
 
   Element *PlainWindow::FindElement(string id) {
@@ -61,7 +60,7 @@ namespace dawn {
     for (auto it = elements_.rbegin(); it != elements_.rend(); ++it) {
       auto &drawing_vec = it->second.drawing_vec;
       for (auto it = drawing_vec.rbegin(); it != drawing_vec.rend(); it++) {
-        DrawSingleElement(*(*it));
+        (*it)->Draw(renderer_);
       }
     }
 
