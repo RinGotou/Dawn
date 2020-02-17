@@ -35,7 +35,7 @@
 #pragma comment(lib,"SDL2_ttf.lib")
 #endif
 
-#define FRAMEWORK_ID "Dawn"
+#define DAWN_VERSION "0.1 Alpha"
 #define DEFAULT_DEPTH 32
 
 namespace dawn {

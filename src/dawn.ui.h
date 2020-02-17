@@ -3,15 +3,18 @@
 
 namespace dawn {
   /* Experimental implementation. BE CAREFUL */
-  enum class ElementSpecType{};
-
-  struct EventSpecInfo {
-    virtual ~EventSpecInfo() {}
+  enum class ElementVariant{
+    Button,
+    ImageView,
+    ScrollBar_Vertical,
+    ScrollBar_Horizontal
   };
 
   struct ElementSpecification {
-    ElementSpecType type;
+    ElementVariant variant;
     SDL_Texture *hover_image;
+    SDL_Texture *mousedown_image;
+    short view_percentage;
   };
 
   class Element {
@@ -105,10 +108,21 @@ namespace dawn {
       RegisterWindow(this, SDL_GetWindowID(window_));
     }
 
+    virtual void operator=(PlainWindow &rhs) {
+      std::swap(window_, rhs.window_);
+      std::swap(renderer_, rhs.renderer_);
+      std::swap(elements_, rhs.elements_);
+      std::swap(real_time_, rhs.real_time_);
+    }
+
+    virtual void operator=(PlainWindow &&rhs) {
+      this->operator=(rhs);
+    }
+
     void ClearElements();
     bool DrawElements();
     //TODO:Update by events
-    void UpdateElementByEventType(string id, SDL_EventType type, EventSpecInfo *info = nullptr);
+    //void UpdateElementByEventType
     bool SetElementPosition(string id, SDL_Point point);
     bool SetElementSize(string id, int width, int height);
     bool SetElementDestination(string id, SDL_Rect dest);

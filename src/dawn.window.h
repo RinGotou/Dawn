@@ -96,7 +96,16 @@ namespace dawn {
     BasicWindow(WindowOption option) {
       Init(option);
       delegator_ = false;
+    }
 
+    virtual void operator=(BasicWindow &rhs) {
+      std::swap(window_, rhs.window_);
+      std::swap(renderer_, rhs.renderer_);
+      std::swap(delegator_, rhs.delegator_);
+    }
+
+    virtual void operator=(BasicWindow &&rhs) {
+      this->operator=(rhs);
     }
 
     BasicWindow(SDL_Window *window, SDL_Renderer *renderer) :
@@ -234,6 +243,12 @@ namespace dawn {
 
     bool SetAlpha(uint8_t a) {
       return SDL_SetTextureAlphaMod(ptr_, a) == 0;
+    }
+
+    void operator=(Texture &rhs) {
+      std::swap(ptr_, rhs.ptr_);
+      std::swap(width_, rhs.width_);
+      std::swap(height_, rhs.height_);
     }
 
     void operator=(Texture &&rhs) {
