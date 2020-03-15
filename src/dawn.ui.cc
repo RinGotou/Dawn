@@ -7,7 +7,7 @@ namespace dawn {
 
   NamedElement *ElementLayer::FindNamedElementByOrder(int64_t order) {
     auto it = begin();
-    for (; it != end(); it++) {
+    for (; it != end(); ++it) {
       if (it->second.order == order) break;
     }
 
@@ -18,7 +18,7 @@ namespace dawn {
 
   void ElementLayer::ResortVector() {
     size_t index = 0;
-    for (auto it = begin(); it != end(); it++) {
+    for (auto it = begin(); it != end(); ++it) {
       while (drawing_vec[index] != &it->second && index < drawing_vec.size()) {
         index += 1;
       }
@@ -59,7 +59,7 @@ namespace dawn {
     // Draw all elements sorted by priority(from bottom to top)
     for (auto it = elements_.rbegin(); it != elements_.rend(); ++it) {
       auto &drawing_vec = it->second.drawing_vec;
-      for (auto it = drawing_vec.rbegin(); it != drawing_vec.rend(); it++) {
+      for (auto it = drawing_vec.rbegin(); it != drawing_vec.rend(); ++it) {
         (*it)->Draw(renderer_);
       }
     }
@@ -252,7 +252,7 @@ namespace dawn {
 
       if (it != layer.second.end()) {
         deque<Element *>::iterator target_it = layer.second.drawing_vec.begin();
-        for (int64_t i = 0; i < it->second.order; i += 1) target_it++;
+        for (int64_t i = 0; i < it->second.order; i += 1) ++target_it;
         layer.second.drawing_vec.erase(target_it);
         layer.second.erase(id);
         result = true;
