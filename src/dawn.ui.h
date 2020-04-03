@@ -45,7 +45,7 @@ namespace dawn {
       order(0), self_held(false)
     {}
 
-    bool Draw(SDL_Renderer *renderer);
+    bool Draw(SDL_Renderer *renderer);//TODO:Element status?
 
     SDL_Texture *GetTexture() { 
       return texture_; 
